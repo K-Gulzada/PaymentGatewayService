@@ -3,7 +3,6 @@ from django.http import JsonResponse
 from rest_framework import permissions
 from rest_framework.decorators import permission_classes
 from rest_framework.generics import get_object_or_404
-from rest_framework.utils import json
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from paymentgateway.models import PaymentMethod, Transaction, Bank, Balance, PaymentStatus
@@ -26,8 +25,7 @@ class PaymentMethodViews(APIView):
     # }
 
     def post(self, request):
-        # paymentMethodData = request.data.get('PaymentMethod')
-        paymentMethodData = request.data
+        paymentMethodData = request.data.get('PaymentMethod')
         serializer = PaymentMethodSerializer(data=paymentMethodData)
         if serializer.is_valid(raise_exception=True):
             paymentMethod = serializer.save()
@@ -36,8 +34,7 @@ class PaymentMethodViews(APIView):
     #
     def put(self, request, pk):
         saved_payment_method = get_object_or_404(PaymentMethod.objects.all(), pk=pk)
-        # data = request.data.get('PaymentMethod')
-        data = request.data
+        data = request.data.get('PaymentMethod')
         serializer = PaymentMethodSerializer(instance=saved_payment_method, data=data, partial=True)
         if serializer.is_valid(raise_exception=True):
             saved_payment_method = serializer.save()
@@ -68,8 +65,7 @@ class BankViews(APIView):
     # }
 
     def post(self, request):
-        # bankData = request.data.get('Bank')
-        bankData = request.data
+        bankData = request.data.get('Bank')
         serializer = BankSerializer(data=bankData)
         if serializer.is_valid(raise_exception=True):
             bank = serializer.save()
@@ -78,8 +74,7 @@ class BankViews(APIView):
     #
     def put(self, request, pk):
         saved_bank = get_object_or_404(Bank.objects.all(), pk=pk)
-        # data = request.data.get('Bank')
-        data = request.data
+        data = request.data.get('Bank')
         serializer = BankSerializer(instance=saved_bank, data=data, partial=True)
         if serializer.is_valid(raise_exception=True):
             saved_bank = serializer.save()
@@ -98,16 +93,10 @@ class BankViews(APIView):
 @permission_classes((permissions.AllowAny,))
 class BalanceViews(APIView):
 
-    def get(self):
+    def get(self, request):
         balances = Balance.objects.all()
         serializer = BalanceSerializer(instance=balances, many=True)
         return JsonResponse({"balances": serializer.data})
-
-    #     search by userid
-    def getBalanceByUserId(self, pk):
-        balance = Balance.objects.get(pk=pk)
-        serializer = BalanceSerializer(instance=balance)
-        return JsonResponse({"balance": serializer.data})
 
     # {
     #     "Balance":{
@@ -118,8 +107,7 @@ class BalanceViews(APIView):
     # }
 
     def post(self, request):
-        # balanceData = request.data.get('Balance')
-        balanceData = request.data
+        balanceData = request.data.get('Balance')
         serializer = BalanceSerializer(data=balanceData)
         if serializer.is_valid(raise_exception=True):
             balance = serializer.save()
@@ -128,8 +116,7 @@ class BalanceViews(APIView):
     #
     def put(self, request, pk):
         saved_balance = get_object_or_404(Balance.objects.all(), pk=pk)
-        # data = request.data.get('Balance')
-        data = request.data
+        data = request.data.get('Balance')
         serializer = BalanceSerializer(instance=saved_balance, data=data, partial=True)
         if serializer.is_valid(raise_exception=True):
             saved_balance = serializer.save()
@@ -152,7 +139,6 @@ class PaymentStatusViews(APIView):
         paymentStatusList = PaymentStatus.objects.all()
         serializer = PaymentStatusSerializer(instance=paymentStatusList, many=True)
         return JsonResponse({"paymentStatusList": serializer.data})
-
     #
     # {
     #     "PaymentStatus":{
@@ -162,8 +148,7 @@ class PaymentStatusViews(APIView):
     # }
 
     def post(self, request):
-        # paymentStatusData = request.data.get('PaymentStatus')
-        paymentStatusData = request.data
+        paymentStatusData = request.data.get('PaymentStatus')
         serializer = PaymentStatusSerializer(data=paymentStatusData)
         if serializer.is_valid(raise_exception=True):
             paymentStatus = serializer.save()
@@ -172,8 +157,7 @@ class PaymentStatusViews(APIView):
     #
     def put(self, request, pk):
         saved_payment_status = get_object_or_404(PaymentStatus.objects.all(), pk=pk)
-        # data = request.data.get('PaymentStatus')
-        data = request.data
+        data = request.data.get('PaymentStatus')
         serializer = PaymentStatusSerializer(instance=saved_payment_status, data=data, partial=True)
         if serializer.is_valid(raise_exception=True):
             saved_payment_status = serializer.save()
@@ -209,89 +193,16 @@ class TransactionViews(APIView):
     # }
 
     def post(self, request):
-        # transactionData = request.data.get('Transaction')
-        # transactionData = request.data
-        # serializer = TransactionSerializer(data=transactionData)
-        # if serializer.is_valid(raise_exception=True):
-        #     transaction = serializer.save()
-        # return JsonResponse(model_to_dict(transaction))
-
-        # {
-        #      "Transaction":{
-        #     "orderInfo":"Order 1 INFO",
-        #     "sum": 54990,
-        #     "statusId":500,
-        #     "paymentMethodId":1,
-        #     "BankId":2,
-        #     "date":"2021-12-12"
-        #      }
-        # }
-
-
-
-
-        data = json.loads(request.body.decode('utf-8'))['Transaction']
-        orderInfo = data['orderInfo']
-        sumFromBody = data['sum']
-        statusId = data['statusId']
-        paymentMethodId = data['paymentMethodId']
-        bankId = data['BankId']
-        dateFromBody = data['date']
-
-        paymentStatus = PaymentStatus.objects.get(statusCode=statusId)
-        serializer_1 = PaymentStatusSerializer(instance=paymentStatus)
-        paymentStatus = serializer_1.save()
-
-        paymentMethod = PaymentMethod.objects.get(id=paymentMethodId)
-        serializer_2 = PaymentMethodSerializer(instance=paymentMethod)
-        paymentMethod = serializer_2.save()
-
-        bank = Bank.objects.get(id=bankId)
-        serializer_3 = BankSerializer(instance=bank)
-        bank = serializer_3.save()
-
-        transaction = Transaction(orderInfo=orderInfo, sum=sumFromBody, statusId=paymentStatus.statusCode,
-                                  paymentMethodId=paymentMethod.id,
-                                  BankId=bank.id, date=dateFromBody)
-
-        # template = Template.objects.get(id=notification.templateID.id)
-        #
-        # text = template.text
-        #
-        # for i in params:
-        #     text = text.replace('#' + i, params[i])
-        #
-        # if notification.sendMethodID.id == 1:
-        #     email = EmailMessage(template.name, text, to=['sniper123zoom@gmail.com'])
-        #     email.send()
-        # elif notification.sendMethodID.id == 2:
-        #     # https://telepot.readthedocs.io/en/latest/
-        #     bot = telepot.Bot('5004111173:AAGrkTPki8mSDRQUpNgU30WlmSCA8bw_dd8')
-        #     bot.sendMessage(861921150,
-        #                     text)  # id key from chat https://api.telegram.org/bot5004111173:AAGrkTPki8mSDRQUpNgU30WlmSCA8bw_dd8/getUpdates
-        #     # telegram_send.send(messages=["Wow that was easy!"])
-        #
-        # notification.save()
-        # return JsonResponse(model_to_dict(notification))
-        #
-        # if serializer.is_valid(raise_exception=True):
-        #     notification = serializer.save()
-        #
-        # id = notification.templateID
-        # id = int(id.id)
-        #
-        # template = Template.objects.get(id=id).text
-        # template = template.replace('#', notification.params)
-        # email = EmailMessage(serializer.date, template, to=['sniper123zoom@gmail.com'])
-        # email.send()
-
+        transactionData = request.data.get('Transaction')
+        serializer = TransactionSerializer(data=transactionData)
+        if serializer.is_valid(raise_exception=True):
+            transaction = serializer.save()
         return JsonResponse(model_to_dict(transaction))
 
     #
     def put(self, request, pk):
         saved_transaction = get_object_or_404(Transaction.objects.all(), pk=pk)
-        # data = request.data.get('Transaction')
-        data = request.data
+        data = request.data.get('Transaction')
         serializer = TransactionSerializer(instance=saved_transaction, data=data, partial=True)
         if serializer.is_valid(raise_exception=True):
             saved_transaction = serializer.save()
@@ -305,3 +216,6 @@ class TransactionViews(APIView):
         return JsonResponse({
             "message": "Transaction with id {} has been deleted.".format(pk)
         }, status=204)
+
+#     search by userid
+#  удалить префиксы

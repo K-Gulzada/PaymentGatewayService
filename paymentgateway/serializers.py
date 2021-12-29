@@ -58,6 +58,8 @@ class BalanceSerializer(serializers.ModelSerializer):
 
 
 class PaymentStatusSerializer(serializers.ModelSerializer):
+    # statusCode = models.BigAutoField(primary_key=True)
+    # description = models.TextField
 
     statusCode = serializers.IntegerField()
     description = serializers.CharField()
