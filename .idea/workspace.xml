@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="88d88fb2-2e14-4cd9-8ac5-9811b68d715c" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/paymentgateway/serializers.py" afterDir="false" />
+    <list default="true" id="88d88fb2-2e14-4cd9-8ac5-9811b68d715c" name="Changes" comment="crud methods">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/paymentgateway/models/Balance.py" beforeDir="false" afterPath="$PROJECT_DIR$/paymentgateway/models/Balance.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/paymentgateway/models/PaymentStatus.py" beforeDir="false" afterPath="$PROJECT_DIR$/paymentgateway/models/PaymentStatus.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/paymentgateway/models/Transaction.py" beforeDir="false" afterPath="$PROJECT_DIR$/paymentgateway/models/Transaction.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/paymentgateway/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/paymentgateway/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/paymentgatewayservice/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/paymentgatewayservice/urls.py" afterDir="false" />
     </list>
