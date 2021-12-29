@@ -36,7 +36,6 @@ class BankSerializer(serializers.ModelSerializer):
 
 
 class BalanceSerializer(serializers.ModelSerializer):
-
     userId = serializers.IntegerField()
     currentBalance = serializers.DecimalField(max_digits=16, decimal_places=2)
     date = serializers.DateField(format="%d-%m-%Y")
@@ -58,7 +57,6 @@ class BalanceSerializer(serializers.ModelSerializer):
 
 
 class PaymentStatusSerializer(serializers.ModelSerializer):
-
     statusCode = serializers.IntegerField()
     description = serializers.CharField()
 
@@ -77,29 +75,35 @@ class PaymentStatusSerializer(serializers.ModelSerializer):
         fields = ('__all__')
 
 
-
 class TransactionSerializer(serializers.ModelSerializer):
-    orderInfo = serializers.CharField(max_length=255)
-    sum = serializers.IntegerField()
-    statusId = serializers.IntegerField()
-    paymentMethodId = serializers.IntegerField()
-    BankId = serializers.IntegerField()
-    date = serializers.DateField(format="%d-%m-%Y")
-
-    def create(self, validated_data):
-        return Transaction.objects.create(**validated_data)
-
-    def update(self, instance, validated_data):
-        instance.orderInfo = validated_data.get('orderInfo', instance.orderInfo)
-        instance.sum = validated_data.get('sum', instance.sum)
-        instance.statusId = validated_data.get('statusId', instance.statusId)
-        instance.paymentMethodId = validated_data.get('paymentMethodId', instance.paymentMethodId)
-        instance.BankId = validated_data.get('BankId', instance.BankId)
-        instance.date = validated_data.get('date', instance.date)
-
-        instance.save()
-        return instance
+    # orderInfo = serializers.CharField(max_length=255)
+    # sum = serializers.IntegerField()
+    # statusId = serializers.IntegerField()
+    # paymentMethodId = serializers.IntegerField()
+    # BankId = serializers.IntegerField()
+    # date = serializers.DateField(format="%d-%m-%Y")
+    #
+    # def create(self, validated_data):
+    #     return Transaction.objects.create(**validated_data)
+    #
+    # def update(self, instance, validated_data):
+    #     instance.orderInfo = validated_data.get('orderInfo', instance.orderInfo)
+    #     instance.sum = validated_data.get('sum', instance.sum)
+    #     instance.statusId = validated_data.get('statusId', instance.statusId)
+    #     instance.paymentMethodId = validated_data.get('paymentMethodId', instance.paymentMethodId)
+    #     instance.BankId = validated_data.get('BankId', instance.BankId)
+    #     instance.date = validated_data.get('date', instance.date)
+    #
+    #     instance.save()
+    #     return instance
 
     class Meta:
         model = Transaction
         fields = ('__all__')
+
+    def to_representation(self, instance):
+        self.fields['statusId'] = PaymentStatusSerializer(read_only=True)
+        self.fields['paymentMethodId'] = PaymentMethodSerializer(read_only=True)
+        self.fields['BankId'] = BankSerializer(read_only=True)
+        return super(TransactionSerializer, self).to_representation(instance)
+

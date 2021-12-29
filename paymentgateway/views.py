@@ -209,12 +209,14 @@ class TransactionViews(APIView):
     # }
 
     def post(self, request):
-        # transactionData = request.data.get('Transaction')
-        # transactionData = request.data
-        # serializer = TransactionSerializer(data=transactionData)
-        # if serializer.is_valid(raise_exception=True):
-        #     transaction = serializer.save()
-        # return JsonResponse(model_to_dict(transaction))
+        transactionData = request.data
+        serializer = TransactionSerializer(data=transactionData)
+        if serializer.is_valid(raise_exception=True):
+            transaction = serializer.save()
+
+        transaction.save()
+
+        return JsonResponse(model_to_dict(transaction))
 
         # {
         #      "Transaction":{
@@ -227,67 +229,6 @@ class TransactionViews(APIView):
         #      }
         # }
 
-
-
-
-        data = json.loads(request.body.decode('utf-8'))['Transaction']
-        orderInfo = data['orderInfo']
-        sumFromBody = data['sum']
-        statusId = data['statusId']
-        paymentMethodId = data['paymentMethodId']
-        bankId = data['BankId']
-        dateFromBody = data['date']
-
-        paymentStatus = PaymentStatus.objects.get(statusCode=statusId)
-        serializer_1 = PaymentStatusSerializer(instance=paymentStatus)
-        paymentStatus = serializer_1.save()
-
-        paymentMethod = PaymentMethod.objects.get(id=paymentMethodId)
-        serializer_2 = PaymentMethodSerializer(instance=paymentMethod)
-        paymentMethod = serializer_2.save()
-
-        bank = Bank.objects.get(id=bankId)
-        serializer_3 = BankSerializer(instance=bank)
-        bank = serializer_3.save()
-
-        transaction = Transaction(orderInfo=orderInfo, sum=sumFromBody, statusId=paymentStatus.statusCode,
-                                  paymentMethodId=paymentMethod.id,
-                                  BankId=bank.id, date=dateFromBody)
-
-        # template = Template.objects.get(id=notification.templateID.id)
-        #
-        # text = template.text
-        #
-        # for i in params:
-        #     text = text.replace('#' + i, params[i])
-        #
-        # if notification.sendMethodID.id == 1:
-        #     email = EmailMessage(template.name, text, to=['sniper123zoom@gmail.com'])
-        #     email.send()
-        # elif notification.sendMethodID.id == 2:
-        #     # https://telepot.readthedocs.io/en/latest/
-        #     bot = telepot.Bot('5004111173:AAGrkTPki8mSDRQUpNgU30WlmSCA8bw_dd8')
-        #     bot.sendMessage(861921150,
-        #                     text)  # id key from chat https://api.telegram.org/bot5004111173:AAGrkTPki8mSDRQUpNgU30WlmSCA8bw_dd8/getUpdates
-        #     # telegram_send.send(messages=["Wow that was easy!"])
-        #
-        # notification.save()
-        # return JsonResponse(model_to_dict(notification))
-        #
-        # if serializer.is_valid(raise_exception=True):
-        #     notification = serializer.save()
-        #
-        # id = notification.templateID
-        # id = int(id.id)
-        #
-        # template = Template.objects.get(id=id).text
-        # template = template.replace('#', notification.params)
-        # email = EmailMessage(serializer.date, template, to=['sniper123zoom@gmail.com'])
-        # email.send()
-
-        return JsonResponse(model_to_dict(transaction))
-
-    #
     def put(self, request, pk):
         saved_transaction = get_object_or_404(Transaction.objects.all(), pk=pk)
         # data = request.data.get('Transaction')
