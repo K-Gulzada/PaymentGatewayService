@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>HomePage</h1>
+
+ <div id="myData" style="width:500px; height:500px; background-color:pink;"></div>
+    <script>
+        fetch('http://localhost:8000/payment-methods/')
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (data) {
+             console.log(data)
+                appendData(data);
+            })
+            .catch(function (err) {
+                console.log('error: ' + err);
+            });
+        function appendData(data) {
+            var mainContainer = document.getElementById("myData");
+            for (var i = 0; i < data.paymentMethods.length; i++) {
+                var div = document.createElement("div");
+                div.innerHTML = 'ID: ' + data.paymentMethods[i].id + ' | ' + ' Name: ' + data.paymentMethods[i].methodName;
+                mainContainer.appendChild(div);
+            }
+        }
+    </script>
+</body>
+</html>
+
+<!--<script>-->
+
+<!--   fetch('http://localhost:8000/payment-methods/')-->
+<!--  .then((response) => {-->
+<!--  -->
+<!--    return response.json();-->
+<!--  })-->
+<!--  .then((data) => {-->
+<!--    console.log(data);-->
+<!--  });-->
+
+<!--     fetch('http://localhost:8000/balance/')-->
+<!--  .then((response) => {-->
+<!--    return response.json();-->
+<!--  })-->
+<!--  .then((data) => {-->
+<!--    console.log(data);-->
+<!--  });-->
+
+
+
+<!--</script>-->

@@ -1,5 +1,6 @@
 from django.forms import model_to_dict
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
+from django.shortcuts import render
 from rest_framework import permissions
 from rest_framework.decorators import permission_classes
 from rest_framework.generics import get_object_or_404
@@ -11,12 +12,21 @@ from paymentgateway.serializers import PaymentMethodSerializer, TransactionSeria
     PaymentStatusSerializer, BalanceSerializer
 
 
+def index(request):
+    # return HttpResponse("Hello, world. You're at the Home page of Django sample project error 404.")
+    return render(request, 'index.html', {})
+
+def homePage(request):
+    return HttpResponse('homepage')
+    # return render(request, "index_")
+
 @permission_classes((permissions.AllowAny,))
 class PaymentMethodViews(APIView):
 
     def get(self, request):
         paymentMethods = PaymentMethod.objects.all()
         serializer = PaymentMethodSerializer(instance=paymentMethods, many=True)
+
         return JsonResponse({"paymentMethods": serializer.data})
 
     # {

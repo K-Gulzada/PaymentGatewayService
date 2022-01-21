@@ -3,6 +3,7 @@ from django.contrib import admin
 # from paymentgateway.views import PaymentMethodViews, TransactionViews, BankViews, PaymentStatusViews
 from django.urls import path, include
 
+from paymentgateway import views
 from paymentgateway.views import PaymentMethodViews, TransactionViews, BankViews, BalanceViews, PaymentStatusViews
 
 urlpatterns = [
@@ -13,6 +14,8 @@ urlpatterns = [
 app_name = "paymentMethods"
 # app_name will help us do a reverse look-up latter.
 urlpatterns = [
+    path('', views.index, name='index'),
+
     path('payment-methods/', PaymentMethodViews.as_view()),
     path('payment-methods/<int:pk>', PaymentMethodViews.as_view()),
 
