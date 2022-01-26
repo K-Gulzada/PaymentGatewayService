@@ -1,10 +1,13 @@
+В проекте PaymentGateService есть 5 классов (PaymentMethod, Bank, Balance, PaymentStatus, Transaction) и для каждого реализованы CRUD методы.
+
 PaymentMethod
-для получение шаблона нужно перейти по get ссылке http://127.0.0.1:8000/api/PaymentMethod
+для получение PaymentMethod (getAll) нужно перейти по ссылке http://127.0.0.1:8000/payment-methods/, GET запрос.
 
        "PaymentMethod":{
        "methodName":"updatedName_2"
        }
-что бы добавить PaymentMethod нужно перейти по той же ссылке только через post
+Чтобы добавить PaymentMethod нужно перейти по той же ссылке только через POST запрос.
+Для обновления и удаления PaymentMethod нужно перейти по ссылке http://localhost:8000/payment-methods/{id}. {id} это айди объекта, которого мы хотим обновить или удалить.
 
 Bank
 для получения выбора метода достаточно перейти по get ссылке http://127.0.0.1:8000/api/Bank
