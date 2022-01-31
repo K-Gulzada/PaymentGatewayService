@@ -3,5 +3,6 @@ from django.db import models
 
 class PaymentStatus(models.Model):
     tablename = "PaymentStatus"
-    statusCode = models.BigAutoField(primary_key=True)
+    id = models.BigAutoField(primary_key=True)
+    status = models.CharField(max_length=255, null=True)
     description = models.TextField(null=True)

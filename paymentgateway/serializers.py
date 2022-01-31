@@ -57,14 +57,14 @@ class BalanceSerializer(serializers.ModelSerializer):
 
 
 class PaymentStatusSerializer(serializers.ModelSerializer):
-    statusCode = serializers.IntegerField()
+    status = serializers.CharField()
     description = serializers.CharField()
 
     def create(self, validated_data):
         return PaymentStatus.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
-        instance.statusCode = validated_data.get('statusCode', instance.statusCode)
+        instance.status = validated_data.get('status', instance.status)
         instance.description = validated_data.get('description', instance.description)
 
         instance.save()

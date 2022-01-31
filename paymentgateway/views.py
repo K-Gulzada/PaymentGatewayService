@@ -115,7 +115,7 @@ class BalanceViews(APIView):
 
     #     search by userid
     def getBalanceByUserId(self, pk):
-        balance = Balance.objects.get(pk=pk)
+        balance = Balance.objects.get(userId=pk)
         serializer = BalanceSerializer(instance=balance)
         return JsonResponse({"balance": serializer.data})
 

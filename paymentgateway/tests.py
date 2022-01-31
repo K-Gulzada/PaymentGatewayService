@@ -1,8 +1,10 @@
 import json
 
 from django.test import TestCase
-from rest_framework.generics import get_object_or_404
 
+# from paymentgateway.models import PaymentMethod, Bank
+#
+#
 from paymentgateway.models import PaymentMethod, Bank
 
 
@@ -25,7 +27,7 @@ class PaymentMethodTest(TestCase):
 
         print(json_object["id"])
         self.assertEqual(response.status_code, 200)
-
+    #
     def test_update(self):
         payment_for_test = {
             "methodName": "name_7"
@@ -37,7 +39,7 @@ class PaymentMethodTest(TestCase):
         self.assertTrue(PaymentMethod.objects.filter(
             methodName="name_7").first())
         self.assertEqual(response.status_code, 200)
-
+    #
     def test_delete(self):
         pm = PaymentMethod(methodName="test delete method")
         pm.save()
@@ -46,13 +48,12 @@ class PaymentMethodTest(TestCase):
         self.assertEqual(response.status_code, 204)
         self.assertFalse(PaymentMethod.objects.filter(id=pm.id).first())
 
-class BankTest(TestCase):
-    def test_getAllData(self):
+    def test_getAllBankData(self):
         response = self.client.get("http://localhost:8000/bank/")
         print(response)
         self.assertEqual(response.status_code, 200)
 
-    def test_postData(self):
+    def test_postBankData(self):
         bank_for_test = {
             "config": "Configuration for test 1"
         }
@@ -66,7 +67,7 @@ class BankTest(TestCase):
         print(json_object["id"])
         self.assertEqual(response.status_code, 200)
 
-    def test_update(self):
+    def test_updateBank(self):
         bank_for_test = {
             "config": "test config"
         }
@@ -75,10 +76,10 @@ class BankTest(TestCase):
         response = self.client.put('http://127.0.0.1:8000/bank/' + str(
             bank.id), json.dumps(bank_for_test), content_type="application/json")
         self.assertTrue(Bank.objects.filter(
-            config="test update method").first())
+            config="test config").first())
         self.assertEqual(response.status_code, 200)
 
-    def test_delete(self):
+    def test_deleteBank(self):
         bank = Bank(config="test delete method")
         bank.save()
         response = self.client.delete(
@@ -86,27 +87,3 @@ class BankTest(TestCase):
         self.assertEqual(response.status_code, 204)
         self.assertFalse(Bank.objects.filter(id=bank.id).first())
 
-
-class TransactionTest(TestCase):
-    def test_getAllData(self):
-        response = self.client.get("localhost:8000/transaction/")
-        print(response)
-        self.assertEqual(response.status_code, 200)
-
-    def test_postData(self):
-        transaction_for_test = {
-            "orderInfo": "Order 2 INFO",
-            "sum": 33990,
-            "statusId": 505,
-            "paymentMethodId": 1,
-            "BankId": 2,
-            "date": "2021-12-12"
-        }
-        response = self.client.post("localhost:8000/transaction/", json.dumps(transaction_for_test),
-                                    content_type="application/json")
-
-        print(json.loads(response.content))
-        json_object = json.loads(response.content)
-
-        print(json_object["id"])
-        self.assertEqual(response.status_code, 200)

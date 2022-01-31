@@ -7,6 +7,7 @@ from paymentgateway.models.PaymentStatus import PaymentStatus
 
 class Transaction(models.Model):
     tablename = "Transactions"
+    userId = models.IntegerField(null=True)
     orderInfo = models.CharField(max_length=255)
     sum = models.IntegerField(null=True)
     statusId = models.ForeignKey(PaymentStatus, on_delete=models.CASCADE)
